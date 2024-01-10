@@ -1,12 +1,52 @@
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 const User = require("../models/User");
+const NodeCache = require("node-cache")
+const nodeCache = new NodeCache()
 
 exports.getAll = async (req, res) => {
   try {
-    const products = await Product.find();
+    const cachedProducts = nodeCache.get("all-products");
+    if(cachedProducts){
+      return res.status(200).json({
+        status: "success",
+        message: "Fetched all products",
+        data: JSON.parse(cachedProducts),
+      });
+    }
+
+    const products = await Product.find().limit(16);
+    nodeCache.set("all-products", JSON.stringify(products));
+    
     res.status(200).json({
-      status: "error",
+      status: "success",
+      message: "Fetched all products",
+      data: products,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res
+      .status(500)
+      .json({ status: "errro", message: "Some Internal Error Occured!" });
+  }
+};
+
+exports.getTopSell = async (req, res) => {
+  try {
+    const cachedProducts = nodeCache.get("top-sell-products");
+    if(cachedProducts){
+      return res.status(200).json({
+        status: "success",
+        message: "Fetched all products",
+        data: JSON.parse(cachedProducts),
+      });
+    }
+
+    const products = await Product.find().sort({sold: -1}).limit(16);
+    nodeCache.set("top-sell-products", JSON.stringify(products));
+    
+    res.status(200).json({
+      status: "success",
       message: "Fetched all products",
       data: products,
     });
@@ -223,28 +263,28 @@ exports.searchByQuery = async (req, res) => {
           totalCount = await Product.countDocuments(query).sort({ _id: -1 });
           products = await Product.find(query)
             .sort({ _id: -1 })
-            .skip(page * limit)
+            .skip((page - 1) * limit)
             .limit(limit);
           break;
         case "top":
           totalCount = await Product.countDocuments(query).sort({ sold: -1 });
           products = await Product.find(query)
             .sort({ sold: -1 })
-            .skip(page * limit)
+            .skip((page - 1) * limit)
             .limit(limit);
           break;
         case "lowest":
           totalCount = await Product.countDocuments(query).sort({ price: 1 });
           products = await Product.find(query)
             .sort({ price: 1 })
-            .skip(page * limit)
+            .skip((page - 1) * limit)
             .limit(limit);
           break;
         case "highest":
           totalCount = await Product.countDocuments(query).sort({ price: -1 });
           products = await Product.find(query)
             .sort({ price: -1 })
-            .skip(page * limit)
+            .skip((page - 1) * limit)
             .limit(limit);
           break;
       }
