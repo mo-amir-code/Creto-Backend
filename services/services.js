@@ -21,6 +21,7 @@ exports.createProducts = async (nop) => {
                 thumbnail:faker.image.url(category="bike"),
                 images:[faker.image.url(category="bike"), faker.image.url(category="bike"), faker.image.url(category="bike"), faker.image.url(category="bike")],
                 type:["road", "mountain", "bmx", "city", "kids"][randomNumber],
+                brand:["bianchi", "bmc", "trek", "hero", "avon"][randomNumber],
                 productUserId:"6598fc0fa0eeab7239967dcf",
                 specs:{
                     frameSize:["S", "M", "L", "XL"], 

@@ -11,7 +11,8 @@ const productSchema = new Schema({
     sold:{type: Number, default: 0},
     thumbnail:{type: String},
     images:[{type: String}],
-    type:{type: String, default: "road", enum: ["road", "mountain", "bmx", "city", "kids"]},
+    type:{type: String, enum: ["road", "mountain", "bmx", "city", "kids"], required: true},
+    brand:{type: String, enum: ["bianchi", "bmc", "trek", "hero", "avon"], required: true},
     productUserId:{type: Schema.Types.ObjectId, ref: 'User', required: true},
     specs:{
         frameSize:[{type:String}], 

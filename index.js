@@ -3,7 +3,6 @@ const { connectToMongo } = require("./services/connectToMDB");
 require("dotenv").config();
 
 
-
 connectToMongo().catch((err) => {
     console.error(err);
 });

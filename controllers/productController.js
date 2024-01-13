@@ -224,7 +224,7 @@ exports.deleteCart = async (req, res) => {
 
 exports.searchByQuery = async (req, res) => {
   try {
-    const { sortby, minPrice, maxPrice, categories, color, page, limit } =
+    const { sortby, minPrice, maxPrice, categories, brand, color, page, limit } =
       req.query;
 
     const query = {};
@@ -245,6 +245,10 @@ exports.searchByQuery = async (req, res) => {
     if (color && color.trim()) {
       // Apply color filter only if provided and not empty
       query.colors = { $in: [color] };
+    }
+
+    if(brand){
+      query.brand = brand;
     }
 
     let products = [];
