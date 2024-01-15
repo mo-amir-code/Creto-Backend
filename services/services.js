@@ -9,6 +9,7 @@ exports.createProducts = async (nop) => {
        const products = [];
         for (let i = 0; i < nop; i++) {
             const randomNumber = Math.floor(Math.random() * 5);
+            const randomNumber2 = Math.floor(Math.random() * 5);
             const uniqueRandomNumbers = generateUniqueRandomNumbers(0, 7, 4)
             const newProduct = {
                 title:faker.commerce.productName(),
@@ -20,7 +21,7 @@ exports.createProducts = async (nop) => {
                 sold:faker.number.int({min:0, max:200}),
                 thumbnail:faker.image.url(category="bike"),
                 images:[faker.image.url(category="bike"), faker.image.url(category="bike"), faker.image.url(category="bike"), faker.image.url(category="bike")],
-                type:["road", "mountain", "bmx", "city", "kids"][randomNumber],
+                type:["road", "mountain", "bmx", "city", "kids"][randomNumber2],
                 brand:["bianchi", "bmc", "trek", "hero", "avon"][randomNumber],
                 productUserId:"6598fc0fa0eeab7239967dcf",
                 specs:{

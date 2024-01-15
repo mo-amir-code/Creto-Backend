@@ -14,7 +14,7 @@ exports.createPromotion = async (req, res) => {
 
         const days = amount;
 
-        await new Promotion({...req.body, promotionExpiry:Date.now() + dayMilliSeconds, days: amount}).save();
+        await new Promotion({...req.body, promotionExpiry:Date.now() + (dayMilliSeconds * days), days}).save();
         res.status(201).json({ status: "success", message: "Promotion created successfully, It will be shown soon"});
     } catch (err) {
         console.error(err);

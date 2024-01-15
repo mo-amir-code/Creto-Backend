@@ -1,13 +1,13 @@
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
 const User = require("../models/User");
-const NodeCache = require("node-cache")
-const nodeCache = new NodeCache()
+const NodeCache = require("node-cache");
+const nodeCache = new NodeCache();
 
 exports.getAll = async (req, res) => {
   try {
     const cachedProducts = nodeCache.get("all-products");
-    if(cachedProducts){
+    if (cachedProducts) {
       return res.status(200).json({
         status: "success",
         message: "Fetched all products",
@@ -17,7 +17,7 @@ exports.getAll = async (req, res) => {
 
     const products = await Product.find().limit(16);
     nodeCache.set("all-products", JSON.stringify(products));
-    
+
     res.status(200).json({
       status: "success",
       message: "Fetched all products",
@@ -34,7 +34,7 @@ exports.getAll = async (req, res) => {
 exports.getTopSell = async (req, res) => {
   try {
     const cachedProducts = nodeCache.get("top-sell-products");
-    if(cachedProducts){
+    if (cachedProducts) {
       return res.status(200).json({
         status: "success",
         message: "Fetched all products",
@@ -42,9 +42,9 @@ exports.getTopSell = async (req, res) => {
       });
     }
 
-    const products = await Product.find().sort({sold: -1}).limit(16);
+    const products = await Product.find().sort({ sold: -1 }).limit(16);
     nodeCache.set("top-sell-products", JSON.stringify(products));
-    
+
     res.status(200).json({
       status: "success",
       message: "Fetched all products",
@@ -71,6 +71,23 @@ exports.getProductById = async (req, res) => {
       status: "error",
       message: "Product fetched successfully",
       data: product,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res
+      .status(500)
+      .json({ status: "errro", message: "Some Internal Error Occured!" });
+  }
+};
+
+exports.getRelatedProducts = async (req, res) => {
+  try {
+    const { type } = req.query;
+    const products = await Product.find({ type });
+    res.status(200).json({
+      status: "error",
+      message: "Product fetched successfully",
+      data: products,
     });
   } catch (err) {
     console.error(err.message);
@@ -224,8 +241,16 @@ exports.deleteCart = async (req, res) => {
 
 exports.searchByQuery = async (req, res) => {
   try {
-    const { sortby, minPrice, maxPrice, categories, brand, color, page, limit } =
-      req.query;
+    const {
+      sortby,
+      minPrice,
+      maxPrice,
+      categories,
+      brand,
+      color,
+      page,
+      limit,
+    } = req.query;
 
     const query = {};
 
@@ -247,7 +272,7 @@ exports.searchByQuery = async (req, res) => {
       query.colors = { $in: [color] };
     }
 
-    if(brand){
+    if (brand) {
       query.brand = brand;
     }
 
@@ -293,12 +318,12 @@ exports.searchByQuery = async (req, res) => {
           break;
       }
 
-      totalCount = await Product.countDocuments(query)
+      totalCount = await Product.countDocuments(query);
       return res.status(200).json({
         status: "success",
         message: "Filtered all products",
         data: products,
-        totalCount
+        totalCount,
       });
     }
 
@@ -310,7 +335,7 @@ exports.searchByQuery = async (req, res) => {
       status: "success",
       message: "Filtered all products",
       data: products,
-      totalCount
+      totalCount,
     });
   } catch (err) {
     console.error(err.message);
@@ -318,3 +343,26 @@ exports.searchByQuery = async (req, res) => {
   }
 };
 
+exports.searchQuery = async (req, res) => {
+  try {
+    const { type } = req.query;
+
+    console.log(type);
+    let products = [];
+
+    if (type && type !== "all") {
+      products = await Product.find({ type: type }).limit(16);
+    } else {
+      products = await Product.find().limit(16);
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Filtered all products",
+      data: products,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ status: "error", message: "Internal server error" });
+  }
+};
