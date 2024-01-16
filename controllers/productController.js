@@ -1,6 +1,5 @@
 const Product = require("../models/Product");
 const Cart = require("../models/Cart");
-const User = require("../models/User");
 const NodeCache = require("node-cache");
 const nodeCache = new NodeCache();
 
@@ -347,7 +346,7 @@ exports.searchQuery = async (req, res) => {
   try {
     const { type } = req.query;
 
-    console.log(type);
+    // console.log(type);
     let products = [];
 
     if (type && type !== "all") {
