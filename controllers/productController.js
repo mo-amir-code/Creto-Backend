@@ -118,7 +118,7 @@ exports.getCartData = async (req, res) => {
     const { userId } = req.query;
     const cartData = await Cart.find({ purchasedUserId: userId }).populate({
       path: "productId",
-      select: "type specs thumbnail",
+      select: "type specs thumbnail title",
     });
     res.status(200).json({
       status: "error",

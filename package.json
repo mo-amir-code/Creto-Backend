@@ -23,6 +23,7 @@
     "nodemailer": "^6.9.8",
     "nodemon": "^3.0.2",
     "npm": "^10.2.5",
-    "otp-generator": "^4.0.1"
+    "otp-generator": "^4.0.1",
+    "stripe": "^14.12.0"
   }
 }
