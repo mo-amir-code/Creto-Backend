@@ -365,3 +365,29 @@ exports.searchQuery = async (req, res) => {
     res.status(500).json({ status: "error", message: "Internal server error" });
   }
 };
+
+exports.deleteUserCartItems = async (req, res) => {
+  try {
+    const { userId, items, all } = req.body;
+    if(all && userId){
+      await Cart.deleteMany({purchasedUserId: userId});
+      return res.status(200).json({
+        status: "success",
+        message: "All cart items have been deleted successfully.",
+        data: { items, all },
+      });
+    }
+    await Cart.deleteMany({_id: {$in: items}})
+    res.status(200).json({
+      status: "success",
+      message: "Cart Items have been deleted successfully.",
+      data: { items, all },
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "error",
+      message: "Some Internal Error Occured!",
+    });
+  }
+};

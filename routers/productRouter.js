@@ -1,5 +1,5 @@
 const express = require("express");
-const { getAll, addToCart, editCart, deleteCart, addProduct, getProductById, getCartCount, getCartData, searchByQuery, getTopSell, getRelatedProducts, searchQuery } = require("../controllers/productController");
+const { getAll, addToCart, editCart, deleteCart, addProduct, getProductById, getCartCount, getCartData, searchByQuery, getTopSell, getRelatedProducts, searchQuery, deleteUserCartItems } = require("../controllers/productController");
 const router = express.Router();
 
 router  
@@ -13,6 +13,7 @@ router
   .post("/add", addProduct)
   .patch("/cart-edit", editCart)
   .delete("/cart/:cartId", deleteCart)
+  .delete("/user/cart", deleteUserCartItems)
   .get("/search", searchByQuery)
   .get("/search-type", searchQuery)
 

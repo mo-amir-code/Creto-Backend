@@ -22,8 +22,8 @@ exports.makePayment = async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.CLIENT_ORIGIN}/success`,
-      cancel_url: `${process.env.CLIENT_ORIGIN}/cancel`,
+      success_url: `${process.env.CLIENT_ORIGIN}/user/cart/checkout/payment/success`,
+      cancel_url: `${process.env.CLIENT_ORIGIN}/user/cart/checkout/payment/cancel`,
     });
 
     res.status(200).json({
