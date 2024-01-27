@@ -25,7 +25,8 @@ exports.createPromotion = async (req, res) => {
 exports.getPromotion = async (req, res) => {
     try {
         const currentTime = Date.now();
-        const promotions = await Promotion.find({promotionExpiry: {$gt: currentTime}}).select("title description image productId").limit(7);
+        // const promotions = await Promotion.find({promotionExpiry: {$gt: currentTime}}).select("title description image productId").limit(7);
+        const promotions = await Promotion.find().select("title description image productId").limit(7);
         res.status(200).json({status: "success", message: "Promotions fetched successfully", data:promotions});
     } catch (err) {
         console.error(err);

@@ -38,3 +38,55 @@ exports.makePayment = async (req, res) => {
     });
   }
 };
+
+exports.getAllOrders = async (req, res) => {
+  try {
+    const {userId} = req.query;
+
+    if(!userId){
+      return res.status(400).json({
+        status: "error",
+        message: "Some Internal Error Occured!",
+      });
+    }
+
+    const orders = await Order.find({purchasedUserId: userId}).select("-purchasedUserId -updatedAt").populate({path:'orderItems.productId', select: "thumbnail title"});
+    
+    res.status(200).json({
+      status: "success",
+      message: "Orders fetched successfully",
+      data: orders,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Some Internal Error Occured!",
+    });
+  }
+};
+
+exports.deleteOrder = async (req, res) => {
+  try {
+    const {orderId} = req.body;
+
+    if(!orderId){
+      return res.status(400).json({
+        status: "error",
+        message: "Some Internal Error Occured!",
+      });
+    }
+
+   await Order.findByIdAndDelete(orderId);
+    
+    res.status(200).json({
+      status: "success",
+      message: "Order deleted successfully",
+      data: {orderId},
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Some Internal Error Occured!",
+    });
+  }
+};
